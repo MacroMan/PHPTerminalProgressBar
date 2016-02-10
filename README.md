@@ -13,7 +13,7 @@ This should run fine on most *nix and OSx environments and also on Windows as lo
 
 @usage - Include the class in your script. Create a new instance to start the progress bar and call update(); to update it.
 
-@example - Also see example.php which can be run from terminal
+@example - See example.php which can be run from terminal
 ```
 include('PHPTerminalProgressBar.php');
 
@@ -26,3 +26,20 @@ for ($i = 0; $i <= 100; $i++) {
 
 $pg->end();
 ````
+
+@example - For usage with narrower screens, eg. un-maximized terminal windows or native server screen, see example_narrow.php
+
+```
+<?php
+
+include('PHPTerminalProgressBar.php');
+
+$pg = new PHPTerminalProgressBar(100, STDERR, true);
+
+for ($i = 0; $i <= 100; $i++) {
+	usleep(100000);
+	$pg->update($i, 100);
+}
+
+$pg->end();
+```
