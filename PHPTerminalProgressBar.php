@@ -1,30 +1,68 @@
 <?php
 
+declare(ticks = 1);
+pcntl_signal(SIGINT, function($signo) {
+	fwrite(STDOUT, "\n\033[?25h");
+	fwrite(STDERR, "\n\033[?25h");
+	exit;
+});
+
 Class PHPTerminalProgressBar {
 
-	public $output, $narrow = false;
+	const MOVE_START = "\033[1;1H";
+	const HIDE_CURSOR = "\033[?25l";
+	const SHOW_CURSOR = "\033[?25h";
+	const ERASE_DISPLAY = "\033[2J";
+	const COLOR_RED = "\033[1;31m";
+	const COLOR_GREEN = "\033[1;32m";
+	const BACKGROUND_RED = "\033[41m";
+	const BACKGROUND_GREEN = "\033[42m";
+	const FORMAT_RESET = "\033[0m";
 
-	public function __construct($total = 0, $output = STDERR, $narrow = false) {
+	public $output,
+			$width,
+			$lastTime;
+
+	public function __construct($output = STDERR) {
+		$this->width = exec("tput cols") / 100;
+		if (!is_numeric($this->width)) {
+			$this->width = 0.8;
+		}
 		$this->output = $output;
-		$this->narrow = $narrow;
-		$bar = ($narrow) ? 50 : 100;
-		$write = sprintf("\033[0G\033[2K[%'=0s>%-{$bar}s] - 0%% - 0/$total", "", "");
-		fwrite($this->output, $write);
+		fwrite($this->output, self::HIDE_CURSOR);
+		fwrite($this->output, self::ERASE_DISPLAY);
+		fwrite($this->output, self::MOVE_START);
+		$this->lastTime = microtime();
 	}
 
 	public function update($done, $total) {
-		$perc = $bar = floor(($done / $total) * 100);
-		$left = 100 - $perc;
-		if ($this->narrow) {
-			$bar = floor($bar / 2);
-			$left = ceil($left / 2);
+		$check = microtime() - $this->lastTime;
+		if ($check > 0.01) {
+			$perc = ($total) ? floor(($done / $total) * 100) : 0;
+			$percPrint = floor($perc * $this->width);
+
+			$percText = "$done/$total - $perc%";
+			$percBefore = str_repeat(" ", floor((($this->width * 100) - strlen($percText)) / 2));
+			$percAfter = str_repeat(" ", ceil((($this->width * 100) - strlen($percText)) / 2));
+			$percParts = str_split($percBefore . $percText . $percAfter);
+
+			fwrite($this->output, self::MOVE_START);
+			fwrite($this->output, self::COLOR_RED . self::BACKGROUND_GREEN);
+
+			foreach ($percParts as $i => $part) {
+				if ($i == $percPrint) {
+					fwrite($this->output, self::COLOR_GREEN . self::BACKGROUND_RED);
+				}
+				fwrite($this->output, $part);
+			}
+
+			fwrite($this->output, self::FORMAT_RESET);
 		}
-		$write = sprintf("\033[0G\033[2K[%'={$bar}s>%-{$left}s] - $perc%% - $done/$total", "", "");
-		fwrite($this->output, $write);
+		$this->lastTime = microtime();
 	}
 
-	public function end() {
-		fwrite($this->output, "\n");
+	public function __destruct() {
+		fwrite($this->output, "\n" . self::SHOW_CURSOR);
 	}
 
 }
