@@ -1,40 +1,84 @@
-# PHPTerminalProgressBar
-
-A progress bar utility for terminal written in PHP
-
-The script prints to STDERR so normal output can still be redirected if needed.
-
-The output can be changed by passing in a write location when initiating or you can set the $output property of the class.
-
-This should run fine on most *nix and OSx environments and also on Windows as long as ANSI.SYS is installed. See https://en.wikipedia.org/wiki/ANSI.SYS
-
-## Code Example
-
-```
-include('PHPTerminalProgressBar.php');
-
-$pg = new PHPTerminalProgressBar();
-
-for ($i = 0; $i <= 100; $i++) {
-	usleep(100000);
-	$pg->update($i, 100);
-}
-````
+Flexible ascii progress bar.
 
 ## Installation
 
-Download and include `PHPTerminalProgressBar.php`
+```
+Include the PHPTerminalProgressBar class
+```
 
-## API Reference
+## Usage
 
-`__construct($output = STDERR);` - Initialise the script, optionally setting the output.
+First we create a `ProgressBar`, giving it a `format` string
+as well as the `total`, telling the progress bar when it will
+be considered complete. After that all we need to do is `tick()` appropriately.
 
-`update($done, $total)` - Update the progress bar, giving the current completed and total figures
+```php
+include('PHPTerminalProgressBar.php');
 
-## Tests
+$pg = new PHPTerminalProgressBar(1000);
 
-Run `example.php` from terminal or command prompt.
+for ($i = 0; $i < 1000; $i++) {
+	usleep(10000);
+	$pg->tick();
+}
+```
+
+You can also use `update(amount)` to set the current tick value instead of ticking each time there is an increment:
+
+```php
+include('PHPTerminalProgressBar.php');
+
+$pg = new PHPTerminalProgressBar(1000);
+
+for ($i = 0; $i < 1000; $i++) {
+	usleep(10000);
+	$pg->update($i);
+}
+```
+
+### Options
+
+These are properties in the object you can read/set:
+
+- `symbolComplete` completion character defaulting to "="
+- `symbolIncomplete` incomplete character defaulting to " "
+- `throttle` minimum time between updates in milliseconds defaulting to 16
+- `current` current tick
+- `total` same value passed in when initialising
+- `percent` (read only) current percentage completion
+- `eta` (read only) estimate seconds until completion
+- `rate` (read only) number of ticks per second
+- `elapsed` (read only) seconds since initialisation
+
+### Tokens
+
+These are tokens you can use in the format of your progress bar.
+
+- `:bar` the progress bar itself
+- `:current` current tick number
+- `:total` total ticks
+- `:elapsed` time elapsed in seconds
+- `:percent` completion percentage
+- `:eta` estimated completion time in seconds
+- `:rate` rate of ticks per second
+
+
+### Interrupt
+
+To display a message during progress bar execution, use `interrupt()`
+```php
+$pg = new PHPTerminalProgressBar(1000);
+
+for ($i = 0; $i < 1000; $i++) {
+	usleep(10000);
+	if ($i % 100 == 0) {
+		// Interupt every 100th tick
+		$pg->interupt($i);
+	}
+	$pg->tick();
+}
+```
 
 ## License
 
-GNU GENERAL PUBLIC LICENSE v2 - See LICENSE
+See LICENSE
