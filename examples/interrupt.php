@@ -1,6 +1,6 @@
 <?php
 
-include('PHPTerminalProgressBar.php');
+include('../PHPTerminalProgressBar.php');
 
 $pg = new PHPTerminalProgressBar(1000);
 
