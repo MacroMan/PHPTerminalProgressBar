@@ -130,15 +130,7 @@ Class PHPTerminalProgressBar {
 	 * Adds 0 and space padding onto floats to ensure the format is fixed length nnn.nn
 	 */
 	private function roundAndPadd($input) {
-		$parts = explode(".", round($input, 2));
-		$output = $parts[0];
-		if (isset($parts[1])) {
-			$output .= "." . str_pad($parts[1], 2, 0);
-		} else {
-			$output .= ".00";
-		}
-
-		return str_pad($output, 6, " ", STR_PAD_LEFT);
+		return str_pad(number_format($input,2,'.',''), 6, " ", STR_PAD_LEFT);
 	}
 
 	/**
