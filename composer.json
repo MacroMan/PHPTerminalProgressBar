@@ -1,0 +1,21 @@
+{
+    "name": "macroman/terminal-progress-bar",
+    "description": "Flexible ascii progress bar.",
+    "type": "library",
+    "homepage": "https://github.com/MacroMan/PHPTerminalProgressBar",
+    "license": "GNU GPLv3",
+    "authors": [
+        {
+            "name": "David Wakelin",
+            "email": "hello@davidwakelin.co.uk"
+        }
+    ],
+    "require": {
+        "php": ">=5.6.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "TerminalProgress": "src/"
+        }
+    }
+}

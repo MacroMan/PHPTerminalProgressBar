@@ -1,5 +1,7 @@
 <?php
 
+namespace TerminalProgress;
+
 declare(ticks = 1);
 pcntl_signal(SIGINT, function($signo) {
 	fwrite(STDOUT, "\n\033[?25h");
@@ -7,7 +9,7 @@ pcntl_signal(SIGINT, function($signo) {
 	exit;
 });
 
-Class PHPTerminalProgressBar {
+Class Bar {
 
 	const MOVE_START = "\033[1G";
 	const HIDE_CURSOR = "\033[?25l";
