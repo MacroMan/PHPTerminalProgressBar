@@ -17,5 +17,6 @@
         "psr-0": {
             "TerminalProgress": "src/"
         }
-    }
+    },
+    "minimum-stability": "dev"
 }
