@@ -42,15 +42,17 @@ for ($i = 0; $i < 1000; $i++) {
 
 These are properties in the object you can read/set:
 
-- `symbolComplete` completion character defaulting to "="
-- `symbolIncomplete` incomplete character defaulting to " "
-- `throttle` minimum time between updates in seconds defaulting to 0.016
-- `current` current tick
-- `total` same value passed in when initialising
-- `percent` (read only) current percentage completion
-- `eta` (read only) estimate seconds until completion
-- `rate` (read only) number of ticks per second
-- `elapsed` (read only) seconds since initialisation
+- `symbolComplete` Completion character defaulting to "="
+- `symbolIncomplete` Incomplete character defaulting to " "
+- `throttle` Minimum time between updates in seconds defaulting to 0.016
+- `current` Current tick
+- `total` Same value passed in when initialising
+- `secondPrecision` Number of decimal digits to use in "seconds" units
+- `percentPrecision` Number of decimal digits to use in "percentage" units
+- `percent` (read only) Current percentage completion
+- `eta` (read only) Estimate seconds until completion
+- `rate` (read only) Number of ticks per second
+- `elapsed` (read only) Seconds since initialisation
 
 ### Tokens
 
@@ -100,25 +102,28 @@ for ($i = 0; $i < 1000; $i++) {
 }
 ```
 
-### Symbols example
+### Symbols/Precision example
 
-To change the symbols used on the progress bar
+To change the symbols or precision used on the progress bar
 ```php
 // examples/symbols.php
 $pg = new Bar(1000);
+
 $pg->symbolComplete = "#";
 $pg->symbolIncomplete = "-";
+
+$pg->secondPrecision = 2;
+$pg->percentPrecision = 4;
 ```
 
 ### Throttle example
 
-If you are `ticking` several hundred or thousands of times per second, the `throttle` setting will be prevent the progress bar from slowing down execution time too much, however, 16ms (default) is quite optimistic, so you may wish to increase it on slower machines.
+The draw interval is throttled at once per 100ms for performance. You can change this value if desired, eg lower for a smoother animation or higher if your work is resource intensive.
 
 ```php
 // examples/throttle.php
 $pg = new Bar(1000);
-// Set a 100 millisecond throttle
-$pg->throttle = 0.1;
+$pg->throttle = 0.05; // Set a 50 millisecond throttle
 ```
 
 ## License
