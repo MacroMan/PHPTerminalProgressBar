@@ -140,7 +140,7 @@ class Bar
     public function __construct($total = 1, $format = "Progress: [:bar] - :current/:total - :percent% - Elapsed::elapseds - ETA::etas - Rate::rate/s", $stream = STDERR)
     {
         // Get the terminal width
-        $this->width = exec("tput cols");
+        $this->width = exec("tput cols 2>/dev/null");
         if (!is_numeric($this->width)) {
             // Default to 80 columns, mainly for windows users with no tput
             $this->width = 80;
