@@ -224,6 +224,7 @@ class Bar
         if (strpos($output, ':bar') !== false) {
             $availableSpace = $this->width - strlen($output) + 4;
             $done = $availableSpace * ($this->percent / 100);
+            $done = (int)$done;
             $left = $availableSpace - $done;
             $output = str_replace(':bar', str_repeat($this->symbolComplete, max($done, 0)) . str_repeat($this->symbolIncomplete, max($left, 0)), $output);
         }
