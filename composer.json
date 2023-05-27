@@ -1,7 +1,7 @@
 {
     "name": "macroman/terminal-progress-bar",
     "description": "Flexible ascii progress bar.",
-    "version": "0.1.7",
+    "version": "0.1.8",
     "type": "library",
     "homepage": "https://github.com/MacroMan/PHPTerminalProgressBar",
     "license": "GPL-3.0-or-later",
@@ -12,7 +12,7 @@
         }
     ],
     "require": {
-        "php": ">=5.6.0|>=8.0"
+        "php": ">=7.0|>=8.0"
     },
     "autoload": {
         "psr-0": {
